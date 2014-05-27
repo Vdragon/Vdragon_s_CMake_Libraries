@@ -1,0 +1,21 @@
+# add all sub directory
+# originally taken from http://stackoverflow.com/questions/7787823/cmake-how-to-get-the-name-of-all-subdirectories-of-a-directory
+macro(addAllSubDirectories result current_directory)
+  file(GLOB children RELATIVE ${current_directory} ${current_directory}/*)
+  set(dirlist "")
+  foreach(child ${children})
+    if(IS_DIRECTORY ${current_directory}/${child})
+        list(APPEND dirlist ${child})
+    endif()
+  endforeach()
+  set(${result} ${dirlist})
+endmacro()
+addAllSubDirectories(subdir_list ${CMAKE_CURRENT_LIST_DIR})
+message(STATUS "找到下列子目錄：\n${subdir_list}")
+foreach(subdir ${subdir_list})
+	if(${subdir} STREQUAL "CMakeFiles")
+		# 跳過 CMakeFiles/
+	else()
+		add_subdirectory(${subdir})
+	endif()
+endforeach()
